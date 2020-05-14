@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An agar.io client adaption made for MultiOgar based servers.">
+    <meta name="keywords" content="agario, agar, io, cell, cells, virus, bacteria, blob, game, games, web game, html5, fun, flash">
+    <meta name="robots" content="index, follow">
+    <meta property="og:image" content="http://agar.io/img/1200x630.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>WAIO Tech Agar v1.0</title>
+    <link id="favicon" rel="icon" type="image/png" href="assets/img/favicon.png" />
+    <link href='assets/css/fonts.googleapis.css' rel='stylesheet' type='text/css'>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/index.css" rel="stylesheet">
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+    <script src="assets/js/main_out.js"></script>
+    
+    <script>
+        // Macro W, shift, doublesplit
+        function keydown(e) {
+            if (e.keyCode === 16)
+                for (var i = 0; i < 5; i++) setTimeout(split, 50 * i);
+            if (e.keyCode === 65)
+                for (var j = 0; j < 3; j++) setTimeout(split, 50 * j);
+            if (e.keyCode === 68) {
+                split();
+                setTimeout(split, 50);
+            }
+        } /*global $*/
+        function split() {
+            $("body").trigger($.Event("keydown", {
+                keyCode: 32
+            }));
+            $("body").trigger($.Event("keyup", {
+                keyCode: 32
+            }));
+        }
+        window.addEventListener("keydown", keydown);
+    </script>
+</head>
+<body>
+    <div id="overlays">
+        <div id="helloDialog">
+            <form role="form">
+                <div class="form-group">
+                    <h2 id="title">WAIO Tech Agar v1.0 <img src="assets/img/waio_logo.png" class="img-rounded" id="logo" alt="WAIO Tech Logo"></h2>
+                </div>
+
+                <div class="form-group">
+                    <input id="nick" class="form-control save" data-box-id="0" placeholder=" Choose Nickname" maxlength="15" />
+</div>
+<br> <br>
+<div class="form-group">
+                    <select id="gamemode" class="form-control" onchange="setServer($(this).val());" required>
+                        <option selected disabled>SELECT Server:</option>
+                        <option value="127.0.0.1:8080">FREE for All - Original (1 x Bot, 1 x Minion)</option>               
+                        <option value="127.0.0.1:8081/">FREE for All - Main Arena (30 x Bots, 1 x Minion)</option>  
+                       <option value="127.0.0.1:8082/">TEAMS (20 x Bots, 1 x Minion)</option>              
+                    </select>
+</div>
+                    <br clear="both" />
+
+     <div class="form-group">
+<select id="select" class="form-control" onchange="window.open(this.options[this.selectedIndex].value);">
+<option selected disabled>STATS Servers (in new Tab):</option>
+<option value="http://127.0.0.1:90">Stats Server -90 - FREE for All - Original</option>
+       <option value="http://127.0.0.1:91">Stats Server 91 - FREE for All - Main Arena</option>
+<option value="http://127.0.0.1:92">Stats Server 92 - TEAMS</option>
+</select>
+
+</div>
+<br>
+                <div class="form-group">
+                    <div class="mb-10">    
+                    </div>
+                    <button type="button" id="play-btn" onclick="play(document.getElementById('nick').value); return false;" class="btn btn-play btn-primary btn-needs-server">Play</button>
+                    <button onclick="$('#settings, #instructions').toggle(); return false;" class="btn btn-info btn-settings" id="settings-btn"><i class="glyphicon glyphicon-cog"></i></button>
+                    <br clear="both" />
+                </div>
+                <div id="settings" class="checkbox" style="display:none;">
+                    <div class="form-group" id="mainform">
+                        <button id="spectate-btn" onclick="spectate(); return false;" style="width: 85%" class="btn btn-success btn-spectate btn-needs-server">Spectate
+                        </button>
+                        <br clear="both" />
+                    </div>
+
+                    <div style="margin: 6px;">
+                        <label><input type="checkbox" class="save" data-box-id="1" onchange="setSkins(!$(this).is(':checked'));"> No skins</label>
+                        <label><input type="checkbox" class="save" data-box-id="2" onchange="setNames(!$(this).is(':checked'));"> No names</label>
+                        <label><input type="checkbox" class="save" data-box-id="3" onchange="setDarkTheme($(this).is(':checked'));"> Dark theme</label>
+                        <label><input type="checkbox" class="save" data-box-id="4" onchange="setColors($(this).is(':checked'));"> No colors</label>
+                        <label><input type="checkbox" class="save" data-box-id="5" onchange="setShowMass($(this).is(':checked'));"> Show mass</label>
+                        <label><input type="checkbox" class="save" data-box-id="7" onchange="setChatHide($(this).is(':checked'));"> Hide chat</label>
+                        <label><input type="checkbox" class="save" data-box-id="8" onchange="setMinimap($(this).is(':checked'));"> Hide minimap</label>
+                        <label><input type="checkbox" class="save" data-box-id="9" onchange="setCellBorder($(this).is(':checked'));" checked> Cell borders</label>
+                        <label><input type="checkbox" class="save" data-box-id="10" onchange="setGrid($(this).is(':checked'));"> Hide grid</label>
+                        <label><input type="checkbox" class="save" data-box-id="11" onchange="setZoom($(this).is(':checked'));"> Infinite zoom</label>
+                        <label><input type="checkbox" class="save" data-box-id="12" onchange="setTransparency($(this).is(':checked'));"> Transparent cells</label>
+                        <label><input type="checkbox" class="save" data-box-id="13" onchange="setMapBorders($(this).is(':checked'));"> Map borders</label>
+                        <label><input type="checkbox" class="save" data-box-id="14" onchange="setSectors($(this).is(':checked'));"> Map sectors</label>
+                        <label><input type="checkbox" class="save" data-box-id="15" onchange="setCellPos($(this).is(':checked'));"> Cell position</label>
+                        <label><input type="checkbox" class="save" data-box-id="16" onchange="setTextOutline($(this).is(':checked'));" checked> Text outline</label>
+                        <label><input type="checkbox" class="save" data-box-id="17" onchange="setFood($(this).is(':checked'));"> Hide food</label>
+                        <p> </p>
+                        <table>
+                            <tr>
+                                <td>
+                                    <label>Leader Text Colour</label>
+                                    <input class="form-control" id="lbColor" placeholder="Default HEX = FAA" value="" style="width:180px;">
+                                </td>
+                                <td>
+                                    <label>Name Text Colour</label>
+                                    <input class="form-control" id="nameColor" placeholder="Default HEX = FFF" value="" style="width:180px;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Cell Border Colour</label>
+                                    <input class="form-control" id="cellBorderColor" placeholder="Default HEX = 000" value="" style="width:180px;">
+                                </td>
+                                <td>
+                                    <label>Cell Border Size</label>
+                                    <input class="form-control" id="cellBorderSize" placeholder="Default = 0 | Max = 50" value="" type="number" min="1" max="50" style="width:180px;">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+            <div id="instructions">
+                <hr/>
+                <center>
+<div class="alert alert-info">
+  <strong>Shortcuts & help!</strong> How to play!
+</div>
+                    <span class="text-muted">
+Choose a <b>Nick name</b>, select a <b>Server</b> and click <b>Play</b><br/>
+                                Customise <b>Settings</b>, click the Cog icon for more<br/>
+            			<b>Move</b> your <b>Mouse</b> to control your cell<br/>
+                               Press <b>Space</b> to split in half & Press <b>W</b> to eject mass<hr/>
+            			Press <b>E</b> to split minions &
+            			Press <b>R</b> to eject mass <br/> Press <b>T</b> to freeze/unfreeze minions<br/>
+            			Press <b>P</b> to make minions collect food<br/>
+                                Press <b>Q</b> to make minions follow you<br/>
+            		    
+                	</span>
+                </center>
+            </div>
+            <div id="footer">
+                <hr/>
+                <!--p><b>Important Links:</b></p-->
+                <a href="https://www.waiotech.co.za" class="text-muted" target="_blank">WAIO Tech Website</a><br>
+            </div>
+        </div>
+    </div>
+    <div id="connecting">
+        <div style="width: 350px; background-color: #FFFFFF; margin: 100px auto; border-radius: 15px; padding: 5px 15px 5px 15px;">
+            <h2>Connecting...</h2>
+            <p> If you cannot connect to the server, check if you have an antivirus or firewall blocking the connection.</p>
+        </div>
+    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <input type="text" id="chat_textbox" placeholder="Press enter to chat" maxlength="200" />
+    <div style="font-family:'Ubuntu'">&nbsp;</div>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+
+
+</body>
+</html>
